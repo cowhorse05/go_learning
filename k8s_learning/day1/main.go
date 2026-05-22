@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 )
 
 func main() {
@@ -33,6 +34,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Welcome to K8s Learning HTTP Server!\n")
 	fmt.Fprintf(w, "请求路径: %s\n", r.URL.Path)
 	fmt.Fprintf(w, "请求方法: %s\n", r.Method)
+	fmt.Fprintf(w, "当前时间: %s\n", time.Now().Format("2006-01-02 15:04:05"))
 }
 
 // 健康检查处理函数（K8s 常用）
@@ -46,6 +48,7 @@ func infoHandler(w http.ResponseWriter, r *http.Request) {
 	hostname, _ := os.Hostname()
 	fmt.Fprintf(w, "=== Service Info ===\n")
 	fmt.Fprintf(w, "Hostname: %s\n", hostname)
+	fmt.Fprintf(w, "Time: %s\n", time.Now().Format("2006-01-02 15:04:05"))
 	fmt.Fprintf(w, "Pod IP: %s\n", r.Host)
 	fmt.Fprintf(w, "User-Agent: %s\n", r.Header.Get("User-Agent"))
 }
