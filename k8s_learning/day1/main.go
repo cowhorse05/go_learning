@@ -4,6 +4,7 @@ a simple htpp service for learning k8s
 package main
 
 import (
+	"flag"
 	"fmt"
 	"net/http"
 	"os"
@@ -11,7 +12,13 @@ import (
 )
 
 func main() {
-	port := os.Getenv("PORT")
+	portFlag := flag.String("port", "", "服务监听端口，默认 8080")
+	flag.Parse()
+
+	port := *portFlag
+	if port == "" {
+		port = os.Getenv("PORT")
+	}
 	if port == "" {
 		port = "8080"
 	}
