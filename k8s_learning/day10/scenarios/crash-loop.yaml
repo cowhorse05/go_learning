@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: crash-demo
+spec:
+  containers:
+  - name: crash
+    image: busybox
+    command: ["/bin/nonexistent"]
+  restartPolicy: Always

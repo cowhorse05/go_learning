@@ -1,0 +1,27 @@
+replicaCount: 3
+
+image:
+  repository: localhost/k8s-day1
+  tag: latest
+  pullPolicy: Never
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+ingress:
+  enabled: false
+  host: myapp.local
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+env:
+  APP_ENV: production
+  LOG_LEVEL: info

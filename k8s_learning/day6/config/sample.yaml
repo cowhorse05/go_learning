@@ -1,0 +1,8 @@
+apiVersion: apps.example.com/v1
+kind: SimpleApp
+metadata:
+  name: my-web
+spec:
+  image: nginx:alpine
+  replicas: 3
+  port: 80

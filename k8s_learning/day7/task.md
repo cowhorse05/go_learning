@@ -1,20 +1,31 @@
-Day 7：CI/CD 流水线
-上午：概念（1.5h）
-CI/CD 流程
-代码提交 → Lint/Test → Build 镜像 → Push Registry → Deploy to K8s
+# Day 7：CI/CD 流水线
 
-Git 工作流
-- Trunk-based（携程常用）：main 分支为主，短生命周期 feature branch
+## 上午：概念（1.5h）
+
+### CI/CD 流程
+
+```
+代码提交 → Lint/Test → Build 镜像 → Push Registry → Deploy to K8s
+```
+
+### Git 工作流
+
+- **Trunk-based**（携程常用）：main 分支为主，短生命周期 feature branch
 - 每次 merge 触发 CI，通过则自动部署
 
-Helm
+### Helm
+
 - K8s 的包管理器
 - Chart = 模板化的 YAML 集合
 - Values.yaml 控制不同环境的差异
 
-下午：实战（4h）
-1. GitHub Actions CI/CD
-创建 .github/workflows/ci.yml：
+## 下午：实战（4h）
+
+### 1. GitHub Actions CI/CD
+
+创建 `.github/workflows/ci.yml`：
+
+```yaml
 name: CI/CD
 on:
   push:
@@ -46,17 +57,24 @@ jobs:
     - name: Deploy to K8s
       run: |
         kubectl set image deploy/go-app go-app=ghcr.io/${{ github.repository }}:${{ github.sha }}
+```
 
-2. 创建 Helm Chart
+### 2. 创建 Helm Chart
+
+```bash
 helm create go-app-chart
+```
 
 关键文件：
-- values.yaml：配置参数
-- templates/deployment.yaml：Deployment 模板
-- templates/service.yaml：Service 模板
-- templates/ingress.yaml：Ingress 模板
+
+- `values.yaml`：配置参数
+- `templates/deployment.yaml`：Deployment 模板
+- `templates/service.yaml`：Service 模板
+- `templates/ingress.yaml`：Ingress 模板
 
 自定义 values.yaml：
+
+```yaml
 replicaCount: 3
 image:
   repository: myapp
@@ -74,8 +92,11 @@ resources:
   limits:
     cpu: 200m
     memory: 128Mi
+```
 
-3. Helm 部署
+### 3. Helm 部署
+
+```bash
 # 本地渲染查看
 helm template go-app ./go-app-chart
 
@@ -87,8 +108,10 @@ helm upgrade go-app ./go-app-chart --set image.tag=v2
 
 # 回滚
 helm rollback go-app 1
+```
 
-今日产出验收
+## ✅ 今日产出验收
+
 - [ ] GitHub Actions 流水线能自动构建推送镜像
 - [ ] Helm Chart 能模板化部署应用
 - [ ] 能用 helm upgrade/rollback 管理版本
