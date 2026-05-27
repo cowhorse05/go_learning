@@ -1,11 +1,15 @@
-Day 4：K8s 存储 + 工作负载 + 弹性
-上午：概念（1.5h）
-存储
-- PV (PersistentVolume)：集群级别的存储资源
-- PVC (PersistentVolumeClaim)：Pod 对存储的申请
-- StorageClass：动态创建 PV 的模板
+# Day 4：K8s 存储 + 工作负载 + 弹性
 
-工作负载类型
+## 上午：概念（1.5h）
+
+### 存储
+
+- **PV (PersistentVolume)**：集群级别的存储资源
+- **PVC (PersistentVolumeClaim)**：Pod 对存储的申请
+- **StorageClass**：动态创建 PV 的模板
+
+### 工作负载类型
+
 | 类型 | 用途 |
 |------|------|
 | Deployment | 无状态应用 |
@@ -14,12 +18,16 @@ Day 4：K8s 存储 + 工作负载 + 弹性
 | Job | 一次性任务 |
 | CronJob | 定时任务 |
 
-HPA (Horizontal Pod Autoscaler)
+### HPA (Horizontal Pod Autoscaler)
+
 - 基于 CPU/内存/自定义指标自动扩缩 Pod 数量
 - 需要 metrics-server
 
-下午：实战（4h）
-1. StatefulSet 部署 MySQL
+## 下午：实战（4h）
+
+### 1. StatefulSet 部署 MySQL
+
+```yaml
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -57,8 +65,11 @@ spec:
       resources:
         requests:
           storage: 1Gi
+```
 
-2. DaemonSet 示例
+### 2. DaemonSet 示例
+
+```yaml
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -76,8 +87,11 @@ spec:
       - name: agent
         image: busybox
         command: ["sh", "-c", "while true; do echo collecting logs; sleep 60; done"]
+```
 
-3. HPA 配置 + 压测
+### 3. HPA 配置 + 压测
+
+```bash
 # 安装 metrics-server（kind 需要额外配置）
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 
@@ -93,8 +107,11 @@ kubectl run load-gen --image=busybox -- sh -c "while true; do wget -q -O- http:/
 # 观察
 kubectl get hpa -w
 kubectl get pods -w
+```
 
-4. Job 和 CronJob
+### 4. Job 和 CronJob
+
+```yaml
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -110,8 +127,10 @@ spec:
             image: busybox
             command: ["echo", "cleanup done"]
           restartPolicy: OnFailure
+```
 
-晚上：今日产出验收
+## ✅ 今日产出验收
+
 - [ ] MySQL StatefulSet 运行，数据持久化（删 Pod 后数据还在）
 - [ ] HPA 压测时自动扩容，压测停止后缩容
 - [ ] 理解 PV/PVC 绑定关系

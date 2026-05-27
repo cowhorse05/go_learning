@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: log-agent
+spec:
+  selector:
+    matchLabels:
+      app: log-agent
+  template:
+    metadata:
+      labels:
+        app: log-agent
+    spec:
+      tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        effect: NoSchedule
+      containers:
+      - name: agent
+        image: busybox
+        command: ["sh", "-c", "while true; do echo collecting logs from $(hostname); sleep 60; done"]
