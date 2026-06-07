@@ -14,12 +14,12 @@ func check(e error) {
 }
 
 func main() {
-	dat, err := os.ReadFile("tmp/dat")
+	dat, err := os.ReadFile("/tmp/dat")
 
 	check(err)
 	fmt.Print(string(dat))
 
-	f, err := os.Open(("tmp/dat"))
+	f, err := os.Open(("/tmp/dat"))
 	check(err)
 
 	b1 := make([]byte, 5)
